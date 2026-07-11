@@ -1,16 +1,22 @@
 .idea/
 .vscode/
 
+*.iml
+*.iws
+*.ipr
 *.log
 *.tmp
 
-backend/build/
+.env
+.env.local
+
 backend/.gradle/
+backend/build/
+backend/out/
+!backend/gradle/wrapper/gradle-wrapper.jar
+!backend/**/src/main/**/build/
+!backend/**/src/test/**/build/
 
 frontend/node_modules/
 frontend/dist/
 frontend/.vite/
-
-.env
-.env.local
-*.iml
