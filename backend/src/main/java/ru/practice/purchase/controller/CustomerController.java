@@ -1,52 +1,47 @@
 package ru.practice.purchase.controller;
 
-import org.jooq.DSLContext;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import ru.practice.purchase.dto.CustomerRequest;
 import ru.practice.purchase.dto.CustomerResponse;
+import ru.practice.purchase.service.CustomerService;
 
 import java.util.List;
 
-import static org.jooq.impl.DSL.field;
-import static org.jooq.impl.DSL.table;
-import static org.jooq.impl.DSL.name;
-
 @RestController
+@RequestMapping("/api/customers")
+@RequiredArgsConstructor
 public class CustomerController {
 
-    private final DSLContext dsl;
+    private final CustomerService customerService;
 
-    public CustomerController(DSLContext dsl) {
-        this.dsl = dsl;
+    @GetMapping
+    public List<CustomerResponse> findAll(
+            @RequestParam(required = false) String search,
+            @RequestParam(defaultValue = "customerName") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDirection
+    ) {
+        return customerService.findAll(search, sortBy, sortDirection);
     }
 
-    @GetMapping("/api/customers")
-    public List<CustomerResponse> getCustomers() {
-        return dsl
-                .select(
-                        field(name("customer_code"), String.class),
-                        field(name("customer_name"), String.class),
-                        field(name("customer_inn"), String.class),
-                        field(name("customer_kpp"), String.class),
-                        field(name("customer_legal_address"), String.class),
-                        field(name("customer_postal_address"), String.class),
-                        field(name("customer_email"), String.class),
-                        field(name("customer_code_main"), String.class),
-                        field(name("is_organization"), Boolean.class),
-                        field(name("is_person"), Boolean.class)
-                )
-                .from(table(name("purchase", "customer")))
-                .fetch(record -> new CustomerResponse(
-                        record.get(field(name("customer_code"), String.class)),
-                        record.get(field(name("customer_name"), String.class)),
-                        record.get(field(name("customer_inn"), String.class)),
-                        record.get(field(name("customer_kpp"), String.class)),
-                        record.get(field(name("customer_legal_address"), String.class)),
-                        record.get(field(name("customer_postal_address"), String.class)),
-                        record.get(field(name("customer_email"), String.class)),
-                        record.get(field(name("customer_code_main"), String.class)),
-                        record.get(field(name("is_organization"), Boolean.class)),
-                        record.get(field(name("is_person"), Boolean.class))
-                ));
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerResponse create(@RequestBody CustomerRequest request) {
+        return customerService.create(request);
+    }
+
+    @PutMapping("/{customerCode}")
+    public CustomerResponse update(
+            @PathVariable String customerCode,
+            @RequestBody CustomerRequest request
+    ) {
+        return customerService.update(customerCode, request);
+    }
+
+    @DeleteMapping("/{customerCode}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable String customerCode) {
+        customerService.delete(customerCode);
     }
 }

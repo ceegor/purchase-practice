@@ -1,0 +1,42 @@
+### Get all customers
+GET http://localhost:8080/api/customers
+
+### Search customers
+GET http://localhost:8080/api/customers?search=ром&sortBy=customerName&sortDirection=asc
+
+### Create customer
+POST http://localhost:8080/api/customers
+Content-Type: application/json
+
+{
+  "customerCode": "CUST-003",
+  "customerName": "АО Тестовый клиент",
+  "customerInn": "7711111111",
+  "customerKpp": "771101001",
+  "customerLegalAddress": "г. Москва, Тестовая ул., д. 3",
+  "customerPostalAddress": "г. Москва, Тестовая ул., д. 3",
+  "customerEmail": "test@example.com",
+  "customerCodeMain": null,
+  "isOrganization": true,
+  "isPerson": false
+}
+
+### Update customer
+PUT http://localhost:8080/api/customers/CUST-003
+Content-Type: application/json
+
+{
+  "customerCode": "CUST-003",
+  "customerName": "АО Тестовый клиент updated",
+  "customerInn": "7711111111",
+  "customerKpp": "771101001",
+  "customerLegalAddress": "г. Москва, Новая ул., д. 5",
+  "customerPostalAddress": "г. Москва, Новая ул., д. 5",
+  "customerEmail": "updated@example.com",
+  "customerCodeMain": null,
+  "isOrganization": true,
+  "isPerson": false
+}
+
+### Delete customer
+DELETE http://localhost:8080/api/customers/CUST-003
