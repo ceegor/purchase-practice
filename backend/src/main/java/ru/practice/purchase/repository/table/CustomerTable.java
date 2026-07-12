@@ -7,7 +7,7 @@ import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.field;
 import static org.jooq.impl.DSL.name;
 
-public class CustomerTable {
+public final class CustomerTable {
 
     public static final Table<?> CUSTOMER = table(name("purchase", "customer"));
 

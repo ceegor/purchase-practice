@@ -1,0 +1,36 @@
+### Get all lots
+GET http://localhost:8080/api/lots
+
+### Search lots
+GET http://localhost:8080/api/lots?search=бумаг&sortBy=lotName&sortDirection=asc
+
+### Create lot
+POST http://localhost:8080/api/lots
+Content-Type: application/json
+
+{
+  "lotName": "Тестовый лот",
+  "customerCode": "CUST-001",
+  "price": 120000.50,
+  "currencyCode": "RUB",
+  "ndsRate": "20%",
+  "placeDelivery": "Склад тестовый",
+  "dateDelivery": "2026-09-01T10:30:00"
+}
+
+### Update lot
+PUT http://localhost:8080/api/lots?lotName=Тестовый%20лот&customerCode=CUST-001
+Content-Type: application/json
+
+{
+  "lotName": "Тестовый лот updated",
+  "customerCode": "CUST-001",
+  "price": 135000.75,
+  "currencyCode": "RUB",
+  "ndsRate": "20%",
+  "placeDelivery": "Склад после изменения",
+  "dateDelivery": "2026-09-05T11:00:00"
+}
+
+### Delete lot
+DELETE http://localhost:8080/api/lots?lotName=Тестовый%20лот%20updated&customerCode=CUST-001
