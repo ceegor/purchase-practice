@@ -1,5 +1,6 @@
 package ru.practice.purchase.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,14 +28,14 @@ public class CustomerController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerResponse create(@RequestBody CustomerRequest request) {
+    public CustomerResponse create(@Valid @RequestBody CustomerRequest request) {
         return customerService.create(request);
     }
 
     @PutMapping("/{customerCode}")
     public CustomerResponse update(
             @PathVariable String customerCode,
-            @RequestBody CustomerRequest request
+            @Valid @RequestBody CustomerRequest request
     ) {
         return customerService.update(customerCode, request);
     }

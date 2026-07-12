@@ -1,0 +1,269 @@
+{
+  "info": {
+    "name": "Purchase Practice API",
+    "description": "CRUD requests for customers and lots.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "customerCode",
+      "value": "CUST-001"
+    },
+    {
+      "key": "testCustomerCode",
+      "value": ""
+    },
+    {
+      "key": "testLotName",
+      "value": ""
+    },
+    {
+      "key": "updatedLotName",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Контрагенты",
+      "item": [
+        {
+          "name": "Получить всех контрагентов",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/customers"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Поиск и сортировка контрагентов",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/customers?search=CUST&sortBy=customerCode&sortDirection=desc"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Создать контрагента",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('testCustomerCode', 'CUST-' + Date.now());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerCode\": \"{{testCustomerCode}}\",\n  \"customerName\": \"Тестовый контрагент Postman\",\n  \"customerInn\": \"7700000000\",\n  \"customerKpp\": \"770001001\",\n  \"customerLegalAddress\": \"Москва\",\n  \"customerPostalAddress\": \"Москва\",\n  \"customerEmail\": \"postman@example.com\",\n  \"customerCodeMain\": null,\n  \"isOrganization\": true,\n  \"isPerson\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/customers"
+          }
+        },
+        {
+          "name": "Изменить контрагента",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"customerCode\": \"{{testCustomerCode}}\",\n  \"customerName\": \"Обновлённый контрагент Postman\",\n  \"customerInn\": \"7700000000\",\n  \"customerKpp\": \"770001001\",\n  \"customerLegalAddress\": \"Санкт-Петербург\",\n  \"customerPostalAddress\": \"Санкт-Петербург\",\n  \"customerEmail\": \"updated@example.com\",\n  \"customerCodeMain\": null,\n  \"isOrganization\": true,\n  \"isPerson\": false\n}"
+            },
+            "url": "{{baseUrl}}/api/customers/{{testCustomerCode}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Удалить контрагента",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/customers/{{testCustomerCode}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Лоты",
+      "item": [
+        {
+          "name": "Получить все лоты",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/lots"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Поиск и сортировка лотов",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/lots?search=RUB&sortBy=price&sortDirection=desc"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Создать лот",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "const suffix = Date.now();",
+                  "pm.collectionVariables.set('testLotName', 'Тестовый лот ' + suffix);",
+                  "pm.collectionVariables.set('updatedLotName', 'Обновлённый лот ' + suffix);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lotName\": \"{{testLotName}}\",\n  \"customerCode\": \"{{customerCode}}\",\n  \"price\": 15000.50,\n  \"currencyCode\": \"RUB\",\n  \"ndsRate\": \"20%\",\n  \"placeDelivery\": \"Москва\",\n  \"dateDelivery\": \"2026-08-01T12:00:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lots"
+          }
+        },
+        {
+          "name": "Изменить лот",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"lotName\": \"{{updatedLotName}}\",\n  \"customerCode\": \"{{customerCode}}\",\n  \"price\": 17500.75,\n  \"currencyCode\": \"RUB\",\n  \"ndsRate\": \"20%\",\n  \"placeDelivery\": \"Санкт-Петербург\",\n  \"dateDelivery\": \"2026-08-10T15:30:00\"\n}"
+            },
+            "url": "{{baseUrl}}/api/lots?lotName={{testLotName}}&customerCode={{customerCode}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Удалить лот",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/lots?lotName={{updatedLotName}}&customerCode={{customerCode}}"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status is 204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

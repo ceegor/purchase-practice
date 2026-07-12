@@ -1,5 +1,6 @@
 package ru.practice.purchase.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +28,7 @@ public class LotController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public LotResponse create(@RequestBody LotRequest request) {
+    public LotResponse create(@Valid @RequestBody LotRequest request) {
         return lotService.create(request);
     }
 
@@ -35,7 +36,7 @@ public class LotController {
     public LotResponse update(
             @RequestParam String lotName,
             @RequestParam String customerCode,
-            @RequestBody LotRequest request
+            @Valid @RequestBody LotRequest request
     ) {
         return lotService.update(lotName, customerCode, request);
     }

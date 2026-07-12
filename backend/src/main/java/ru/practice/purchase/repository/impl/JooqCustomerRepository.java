@@ -38,7 +38,7 @@ public class JooqCustomerRepository implements CustomerRepository {
 
     @Override
     public CustomerResponse create(CustomerRequest request) {
-        return dsl.insertInto(CUSTOMER)
+        dsl.insertInto(CUSTOMER)
                 .set(CUSTOMER_CODE, request.customerCode())
                 .set(CUSTOMER_NAME, request.customerName())
                 .set(CUSTOMER_INN, request.customerInn())
@@ -49,8 +49,9 @@ public class JooqCustomerRepository implements CustomerRepository {
                 .set(CUSTOMER_CODE_MAIN, request.customerCodeMain())
                 .set(IS_ORGANIZATION, request.isOrganization())
                 .set(IS_PERSON, request.isPerson())
-                .returningResult(CUSTOMER.fields())
-                .fetchOne(customerMapper::toResponse);
+                .execute();
+
+        return findByCode(request.customerCode()).orElseThrow();
     }
 
     @Override

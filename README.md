@@ -1,74 +1,97 @@
-# Практика: purchase CRUD
+# Purchase Practice
 
-Монорепозиторий для задания по летней практике:
+Учебное приложение для управления контрагентами и лотами.
 
-- `backend` - REST API на Spring Boot 3 и jOOQ.
-- `frontend` - React-приложение с Consta UI.
-- `database` - SQL-схема `purchase`.
-- `postman` - коллекция для проверки REST-запросов.
+## Технологии
 
-## Что реализовано
+- PostgreSQL
+- Java 17, Spring Boot 3, jOOQ, Gradle
+- React, Vite, Consta UI
+- Postman
 
-- Схема PostgreSQL `purchase`.
-- Таблицы `purchase.customer` и `purchase.lot`.
-- CRUD REST API для контрагентов и лотов.
-- Поиск, сортировка, добавление, редактирование и удаление в React.
-- Навигация между экранами таблиц.
+## Структура проекта
 
-## Локальный запуск
+- `database` — SQL-скрипты схемы `purchase`.
+- `backend` — REST API для контрагентов и лотов.
+- `frontend` — пользовательский интерфейс React.
+- `postman` — коллекция запросов для проверки API.
 
-1. Запустить PostgreSQL.
+## Подготовка базы данных
 
-   Можно использовать локальный PostgreSQL на `localhost:5432` или Docker:
+1. Запустить локальный PostgreSQL.
+2. Открыть DBeaver и подключиться к базе `postgres`.
+3. Выполнить скрипт `database/schema.sql`.
+4. Если таблицы были созданы раньше, дополнительно выполнить
+   `database/add_lot_primary_key.sql`.
 
-   ```powershell
-   docker compose up -d
-   ```
+Скрипты создают схему `purchase` и таблицы:
 
-2. Настроить backend-подключение к БД.
+- `purchase.customer`;
+- `purchase.lot` с составным ключом `(lot_name, customer_code)`.
 
-   По умолчанию используются:
+## Запуск backend
 
-   ```text
-   DB_URL=jdbc:postgresql://localhost:5432/postgres
-   DB_USERNAME=postgres
-   DB_PASSWORD=postgres
-   ```
+В командной строке Windows:
 
-3. Запустить backend:
+```cmd
+cd backend
+set "DB_PASSWORD=пароль_от_PostgreSQL"
+gradlew.bat bootRun
+```
 
-   ```powershell
-   cd backend
-   gradle bootRun
-   ```
+Дополнительные переменные подключения:
 
-4. Запустить frontend:
+```text
+DB_URL=jdbc:postgresql://localhost:5432/postgres
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+```
 
-   ```powershell
-   cd frontend
-   npm.cmd install
-   npm.cmd run dev
-   ```
+После запуска API доступно по адресу `http://localhost:8080`.
 
-5. Открыть приложение:
+## Запуск frontend
 
-   ```text
-   http://localhost:5173
-   ```
+В отдельной командной строке:
+
+```cmd
+cd frontend
+npm.cmd install
+npm.cmd run dev
+```
+
+Приложение доступно по адресу `http://localhost:5173`.
 
 ## REST API
 
-- `GET /api/customers?search=&sort=customerName,asc`
+### Контрагенты
+
+- `GET /api/customers`
+- `GET /api/customers?search=CUST&sortBy=customerCode&sortDirection=desc`
 - `POST /api/customers`
 - `PUT /api/customers/{customerCode}`
 - `DELETE /api/customers/{customerCode}`
-- `GET /api/lots?search=&sort=lotName,asc`
+
+### Лоты
+
+- `GET /api/lots`
+- `GET /api/lots?search=RUB&sortBy=price&sortDirection=desc`
 - `POST /api/lots`
-- `PUT /api/lots`
-- `DELETE /api/lots`
+- `PUT /api/lots?lotName=...&customerCode=...`
+- `DELETE /api/lots?lotName=...&customerCode=...`
 
-## Демо для куратора
+## Проверка в Postman
 
-1. В DBeaver показать схему `purchase`, таблицы `customer` и `lot`, а также тестовые данные.
-2. В Postman импортировать коллекцию из папки `postman` и выполнить CRUD-запросы.
-3. В браузере открыть React-приложение и показать списки, фильтрацию, сортировку, создание, изменение и удаление записей.
+Импортировать файл:
+
+```text
+postman/purchase-practice.postman_collection.json
+```
+
+Запросы в папках коллекции выполнять сверху вниз. Коллекция содержит проверки
+ожидаемых HTTP-статусов и автоматически создаёт тестовые значения для CRUD.
+
+## Сценарий демонстрации
+
+1. В DBeaver показать схему `purchase`, структуру и содержимое таблиц.
+2. В Postman выполнить получение, поиск, создание, изменение и удаление записей.
+3. В браузере показать обе вкладки React-приложения, поиск, сортировку и CRUD.

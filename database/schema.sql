@@ -21,7 +21,8 @@ create table if not exists purchase.lot (
     currency_code varchar not null check (currency_code in ('RUB', 'USD', 'EUR')),
     nds_rate varchar not null check (nds_rate in ('Без НДС', '18%', '20%')),
     place_delivery varchar,
-    date_delivery timestamp
+    date_delivery timestamp,
+    primary key (lot_name, customer_code)
 );
 
 create index if not exists idx_customer_name on purchase.customer(customer_name);
